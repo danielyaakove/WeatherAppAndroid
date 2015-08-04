@@ -7,7 +7,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -34,4 +37,17 @@ public class DailyForecastActivity extends ListActivity {
         setListAdapter(adapter);
     }
 
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+        String dayOfWeek=mDays[position].getDayOfWeek();
+        String summery=mDays[position].getSummery();
+        String highTemp=mDays[position].getTemperatureMax()+"";
+
+        String message=String.format("on %s the high will be %s and it will be %s",dayOfWeek,summery,highTemp);
+
+        Toast.makeText(this,message, Toast.LENGTH_LONG).show();
+
+    }
 }

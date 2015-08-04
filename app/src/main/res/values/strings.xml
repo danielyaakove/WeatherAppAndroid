@@ -17,4 +17,5 @@
     <string name="Hourly">שעתי</string>
     <string name="WeekWeather">תחזית שבועית</string>
     <string name="Today">היום </string>
+    <string name="title_activity_hourly_forecast">HourlyForecastActivity</string>
 </resources>

@@ -162,7 +162,8 @@
             android:id="@+id/hourlyButon"
             android:layout_weight="1"
             android:background="#40ffffff"
-            android:textColor="#ffffffff"/>
+            android:textColor="#ffffffff"
+            android:onClick="startHourlyActivity"/>
 
         <Button
             android:layout_width="match_parent"

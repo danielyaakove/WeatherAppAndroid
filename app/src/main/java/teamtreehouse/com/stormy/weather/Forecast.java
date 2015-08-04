@@ -71,4 +71,12 @@ public class Forecast {
 
         return iconId;
     }
+
+    public static int ConvertToCelsius(double fahrenheitTemperature)
+    {
+        int celsiusTemperature=0;
+
+        celsiusTemperature = (int) Math.round(((fahrenheitTemperature - 32) * 5) / 9);
+        return celsiusTemperature;
+    }
 }

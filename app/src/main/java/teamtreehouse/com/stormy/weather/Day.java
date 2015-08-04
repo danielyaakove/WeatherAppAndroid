@@ -35,7 +35,8 @@ public class Day implements Parcelable {
     }
 
     public int getTemperatureMax() {
-        return (int) Math.round(mTemperatureMax/2.8888) ;
+
+        return Forecast.ConvertToCelsius(mTemperatureMax);
     }
 
     public void setTemperatureMax(double temperatureMax) {

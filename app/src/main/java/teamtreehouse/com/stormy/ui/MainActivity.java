@@ -15,6 +15,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -36,11 +39,16 @@ import teamtreehouse.com.stormy.weather.Forecast;
 import teamtreehouse.com.stormy.weather.Hour;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
-    public static final String DAILY_FORECAST="DAILY_FORECAST";
+    public static final String DAILY_FORECAST = "DAILY_FORECAST";
+    public static final String HOURLY_FORECAST = "HOURLY_FORECAST";
     private Forecast mForecast;
+    private GoogleApiClient mGoogleApiClient;
+
     @Bind(R.id.timeLable)
     TextView mTimeLabel;
     @Bind(R.id.temperatureLable)
@@ -72,9 +80,16 @@ public class MainActivity extends ActionBarActivity {
 
         ButterKnife.bind(this);
         mProgressBar.setVisibility(View.INVISIBLE);
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
         getForecast();
 
-        Log.d(TAG, "Main UI code is running!");
+        //Log.d(TAG, "Main UI code is running!");
     }
 
     private void getForecast() {
@@ -181,11 +196,11 @@ public class MainActivity extends ActionBarActivity {
             JSONObject jsonHour = data.getJSONObject(i);
 
             Hour hour = new Hour();
-            hour.setsSummery(jsonHour.getString("summary"));
+            hour.setSummary(jsonHour.getString("summary"));
             hour.setTemperature(jsonHour.getDouble("temperature"));
             hour.setIcon(jsonHour.getString("icon"));
             hour.setTime(jsonHour.getLong("time"));
-            hour.setTimeZone(timeZone);
+            hour.setTimezone(timeZone);
 
             hoursData[i] = hour;
 
@@ -207,7 +222,7 @@ public class MainActivity extends ActionBarActivity {
         for (int i = 0; i < data.length(); i++) {
             JSONObject jsonHour = data.getJSONObject(i);
 
-            Day hour =new Day();
+            Day hour = new Day();
             hour.setSummery(jsonHour.getString("summary"));
             hour.setTemperatureMax(jsonHour.getDouble("temperatureMax"));
             hour.setIcon(jsonHour.getString("icon"));
@@ -269,8 +284,31 @@ public class MainActivity extends ActionBarActivity {
 
     public void startDailyActivity(View view) {
         Intent intent = new Intent(this, DailyForecastActivity.class);
-        intent.putExtra(DAILY_FORECAST,mForecast.getDailyForcast());
+        intent.putExtra(DAILY_FORECAST, mForecast.getDailyForcast());
         startActivity(intent);
+    }
+
+    public void startHourlyActivity(View view) {
+
+        Intent intent = new Intent(this, HourlyForecastActivity.class);
+        intent.putExtra(HOURLY_FORECAST, mForecast.getHourlyForcast());
+
+        startActivity(intent);
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.i(TAG, "Location services connected.");
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.i(TAG, "Location services suspended. Please reconnect.");
     }
 }
 
